@@ -56,15 +56,15 @@ Based on all the cognitive screens in the .csv file, we would need to search for
 ```{r text_list, include=TRUE}
 library(stringr)
 
-test_full_names<- str_flatten(cog_screens$Test_Name,"\" OR \"")
-test_abbreviations<- str_flatten(abbrevsonly$Abbreviation,"\" OR \"")
-test_referents <- str_c("\"", test_full_names, "\" OR \"", test_abbreviations, "\"")
- writeLines(test_referents)
+screen_full_names<- str_flatten(cog_screens$Test_Name,"\" OR \"")
+screen_abbreviations<- str_flatten(abbrevsonly$Abbreviation,"\" OR \"")
+screen_referents <- str_c("\"", screen_full_names, "\" OR \"", screen_abbreviations, "\"")
+ writeLines(screen_referents)
 
 ```
 In other words:
 
-`r test_referents`
+`r screen_referents`
 
 
 *Note:* in fact some of the screeners names will need to be amended with wildcards.
@@ -72,3 +72,12 @@ In other words:
 ## Putting search terms into readable contexts
 
 ### EBSCO Host
+
+```{r}
+s_screen_title <-  str_c("TI (",screen_referents,")")
+s_screen_abstract <-  str_c("AB (",screen_referents,")")
+  s_screen_testmeasures <- <-  str_c("TM (",screen_referents,")")
+TM () OR TI ( ) OR AB ( )
+```
+
+
