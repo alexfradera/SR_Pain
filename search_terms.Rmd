@@ -46,13 +46,14 @@ abbrevsonly <- filter(cog_screens, cog_screens$Abbreviation != "to complete")
 
 Based on all the cognitive screens in the .csv file, we would need to search for these test names and referents.
 
-```{r text_list, include=FALSE}
+```{r text_list, include=TRUE}
 library(stringr)
 
 test_full_names<- str_flatten(cog_screens$Test_Name," OR ")
 test_abbreviations<- str_flatten(abbrevsonly$Abbreviation," OR ")
 test_referents <- str_c(test_full_names, " OR ", test_abbreviations)
 test_referents
+
 ```
 
 *Note:* in fact some of the screen names must be amended with wildcards.
