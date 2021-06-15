@@ -49,10 +49,10 @@ Based on all the cognitive screens in the .csv file, we would need to search for
 ```{r text_list, include=TRUE}
 library(stringr)
 
-test_full_names<- str_flatten(cog_screens$Test_Name," OR ")
-test_abbreviations<- str_flatten(abbrevsonly$Abbreviation," OR ")
-test_referents <- str_c(test_full_names, " OR ", test_abbreviations)
-test_referents
+test_full_names<- str_flatten(cog_screens$Test_Name,"\" OR \"")
+test_abbreviations<- str_flatten(abbrevsonly$Abbreviation,"\" OR \"")
+test_referents <- str_c("\"", test_full_names, "\" OR \"", test_abbreviations)
+writeLines(test_referents)
 
 ```
 
