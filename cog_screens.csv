@@ -86,19 +86,19 @@ Abbreviated Mental Test,AMT,Hodkinson 1972,TRUE,TRUE,TRUE,TRUE,TRUE,1,0,0,0,0,0,
 General Practitioner Assessment of Cognition,GPCOG,,TRUE,TRUE,TRUE,TRUE,TRUE,1,0,0,0,0,0,0,0,1,1,0,0,1,0,0
 Verbal Fluency,to complete,,TRUE,TRUE,TRUE,TRUE,TRUE,1,0,0,0,0,0,0,0,1 (categories),0,0,0,1,0,0
 Modified Mini-mental state examination,3MS,"Teng & Choi, 1987",TRUE,TRUE,TRUE,TRUE,TRUE,0,0,0,0,0,0,1,0,1,1,0,0,1,0,0
-Addenbrooke’s Cognitive Examination,ACE,"Mathuranath, Nestor, Berrios, Rakowicz, & Hodges, 2000)",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0
+Addenbrooke's Cognitive Examination,ACE,"Mathuranath, Nestor, Berrios, Rakowicz, & Hodges, 2000)",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0
 Alzheimer Disease Assessment Scale Cognitive Subscale,ADAS-cog,"(Rosen, Mohs, & Davis, 1984)",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0
-Benton’s Visual Retention Test,BVRT,"Benton, 1965",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+Benton's Visual Retention Test,BVRT,"Benton, 1965",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
 Chinese Abbreviated Mild Cognitive Impairment Test ,CAMCI,"Lam et al., 2008",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
 Isaacs Set Test ,IST,"Isaacs & Kennie, 1973",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
-Revised Hasegawa’s Dementia Scale ,HDS-R,"Imai & Hasegawa, 1994",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+Revised Hasegawa's Dementia Scale ,HDS-R,"Imai & Hasegawa, 1994",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
 Standardized Mini-Mental State Examination,S-MMSE,"Molloy, Alemayehu, & Roberts, 1991",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
 Cognitive Capacity Screening Examination,CCSE,"Jacobs, Bernhard, Delgado, & Strain, 1977",TRUE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0
 Short Test of Mental Status,STMS,"Kokmen, Naessens, & Offord, 1987",TRUE,TRUE,TRUE,TRUE,TRUE,1,0,0,0,0,0,0,0,1,1,0,1,0,0,0
 Montreal Cognitive Assessment ,MoCA,"Nasreddine et al., 2003",FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0
 Informant Questionnaire on Cognitive Decline in the Elderly,IQCODE,"Jorm & Jacomb, 1989",TRUE,FALSE,TRUE,TRUE,TRUE,0,0,1,0,0,0,0,0,1,0,1,1,1,0,0
 Memory Impairment Screen,MIS,"Buschke et al., 1999",TRUE,TRUE,TRUE,TRUE,TRUE,1,0,0,1,0,0,0,0,1,0,0,1,1,0,0
-Addenbrooke’s Cognitive Examination Revised,ACE-R,"Mioshi, Dawson, Mitchell, Arnold, & Hodges, 2006)",TRUE,TRUE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0
+Addenbrooke's Cognitive Examination Revised,ACE-R,"Mioshi, Dawson, Mitchell, Arnold, & Hodges, 2006)",TRUE,TRUE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0
 Mini Mental State Examination,MMSE,"Folstein et al., 1975",TRUE,TRUE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0
 Indiana University Telephone-Based Assessment of Neuropsychological Status,to complete,,FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0
 IntegNeuro,to complete,,FALSE,FALSE,TRUE,TRUE,TRUE,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0
