@@ -12,8 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Using litsearchr
-```{r install litsearchr}
+```{r install packages}
 library(litsearchr)
+library(dplyr)
 packageVersion("litsearchr")
 ```
 
@@ -40,6 +41,7 @@ keywords <- extract_terms(keywords=naive_results[, "keywords"], method="tagged",
 A bit more to do here as titles can contain many "stopwords" that are not informative to the topic of the article. I have begun to build a tentative stopword list at SR_stopwords.txt 
 
 ```{r create_stops}
+library(readr)
 SR_stopwords <- read_lines("SR_stopwords.txt")
 all_stopwords <- c(get_stopwords("English"), SR_stopwords)
 
@@ -82,6 +84,7 @@ network_vis<-ggraph(g, layout="stress") +
      geom_node_point(shape="circle filled", fill="white") +
      geom_node_text(aes(label=name), hjust="outward", check_overlap=TRUE) +
      guides(edge_alpha=FALSE)
+network_vis
 ```
 
 And find the strongest links in the network
@@ -134,6 +137,7 @@ extra_terms <- c(
 )
 
 longlist <-c(longlist, extra_terms)
+longlist
 
 ```
 
@@ -143,12 +147,16 @@ longlist <-c(longlist, extra_terms)
 ## Grouping with litsearchr
 
 
-```{r}
+```{r make_terms_shortlists}
 grouped_terms <-list(
   pain=longlist[c(12,13,14,37,44,45,50,54,55,62,63,99)],
  cognition=longlist[c(15:20,24,51,96,100)],
   screen=longlist[c(7,82,93,101)]
 )
+grouped_terms
+```
+
+```{r write_shortlist, eval=FALSE, include=TRUE}
 
 # record this search into a text file
 write_search(
@@ -178,7 +186,7 @@ new_results <- import_results(file="new_pubmed.nbib")
 ```
 
 
-```{r}
+```{r find_discrepancies}
 naive_results %>%
   mutate(in_new_results=title %in% new_results[, "title"]) ->
   naive_results
@@ -186,7 +194,11 @@ naive_results %>%
 excluded_articles <- naive_results %>%
   filter(!in_new_results) %>%
   select(title, keywords)
-write.csv(excluded_articles, file = "excluded_articles.csv")
+
+```
+
+```{r write_discrepancies, eval=FALSE, include=TRUE}
+ write.csv(excluded_articles, file = "excluded_articles.csv")
 ```
 
 
@@ -270,10 +282,10 @@ In other words:
 
 ### EBSCO Host
 
-```{r}
+```{r make_ebsco_friendly}
 s_screen_title <-  str_c("TI (",screen_referents,")")
 s_screen_abstract <-  str_c("AB (",screen_referents,")")
-  s_screen_testmeasures <- <-  str_c("TM (",screen_referents,")")
+  s_screen_testmeasures  <-  str_c("TM (",screen_referents,")")
 
 ```
 
