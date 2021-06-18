@@ -21,10 +21,11 @@ packageVersion("litsearchr")
 ## Completing the naive search
 
 I put into PubMed pain* AND cognit* and screen* which produced 949 results.
+Variant search: using NOT (cognit* behav* therapy) to limit the irrelevant results (659)
 I then put this into litsearchr
 
 ```{r naiveresults}
-naive_results <- import_results(file="pubmed-painANDcog-set.nbib")
+naive_results <- import_results(file="pubmed-painANDcog-set_no_CBT.nbib")
 nrow(naive_results)
 ```
 ## Collating search keywords
@@ -119,16 +120,42 @@ selected_terms <- get_keywords(g_redux)
 selected_terms
 ```
 
+### find some way of connecting this back with the keywords
+The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been reduced down in the network analysis, but we don't want to discard either.
+```{r longlist}
+longlist <- unique(c(keywords, selected_terms))
+```
 
 
 
 
+## Grouping with litsearchr
+
+
+```{r}
+grouped_terms <-list(
+  pain=longlist[c(12,13,14,37,44,45,50,54,55,62,63)],
+ cognition=longlist[c(15:20,24,51,96yes)],
+  screen=longlist[c(7,82,93)]
+)
+
+# record this search into a text file
+write_search(
+  grouped_terms,
+  languages="English",
+  exactphrase=TRUE,
+  stemming=FALSE,
+  closure="left",
+  writesearch=TRUE
+)
+
+cat(read_file("search-inEnglish.txt"))
+```
 
 
 
 
-
-
+\(\("chronic migraine" OR "chronic musculoskeletal pain" OR "chronic pain" OR fibromyalgia OR knee OR "low back pain" OR migraine OR "neuropathic pain" OR nociception OR pain\) AND \(cognition OR cognitive OR dementia OR "mild cognitive impairment"\) AND \(screening\)\)
 
 
 
