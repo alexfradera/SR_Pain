@@ -121,9 +121,20 @@ selected_terms
 ```
 
 ### find some way of connecting this back with the keywords
-The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been reduced down in the network analysis, but we don't want to discard either.
+The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been reduced down in the network analysis, but we don't want to discard either. Also add in some starred terms from the original approach
 ```{r longlist}
+
+
 longlist <- unique(c(keywords, selected_terms))
+
+extra_terms <- c(
+  "pain*",
+  "cognit*",
+  "screen*"
+)
+
+longlist <-c(longlist, extra_terms)
+
 ```
 
 
@@ -134,9 +145,9 @@ longlist <- unique(c(keywords, selected_terms))
 
 ```{r}
 grouped_terms <-list(
-  pain=longlist[c(12,13,14,37,44,45,50,54,55,62,63)],
- cognition=longlist[c(15:20,24,51,96yes)],
-  screen=longlist[c(7,82,93)]
+  pain=longlist[c(12,13,14,37,44,45,50,54,55,62,63,99)],
+ cognition=longlist[c(15:20,24,51,96,100)],
+  screen=longlist[c(7,82,93,101)]
 )
 
 # record this search into a text file
@@ -144,7 +155,7 @@ write_search(
   grouped_terms,
   languages="English",
   exactphrase=TRUE,
-  stemming=FALSE,
+  stemming=FALSE, # DECISION: stem or not stem?
   closure="left",
   writesearch=TRUE
 )
@@ -158,7 +169,41 @@ cat(read_file("search-inEnglish.txt"))
 \(\("chronic migraine" OR "chronic musculoskeletal pain" OR "chronic pain" OR fibromyalgia OR knee OR "low back pain" OR migraine OR "neuropathic pain" OR nociception OR pain\) AND \(cognition OR cognitive OR dementia OR "mild cognitive impairment"\) AND \(screening\)\)
 
 
+### Feeding this back in to pubmed
 
+We get a new search, which we save in as new_results:
+
+```{r import_new}
+new_results <- import_results(file="new_pubmed.nbib")
+```
+
+
+```{r}
+naive_results %>%
+  mutate(in_new_results=title %in% new_results[, "title"]) ->
+  naive_results
+
+excluded_articles <- naive_results %>%
+  filter(!in_new_results) %>%
+  select(title, keywords)
+write.csv(excluded_articles, file = "excluded_articles.csv")
+```
+
+
+
+
+```{r checking_importants}
+important_titles <- c(
+  "Screening for pain in patients with cognitive and communication difficulties: evaluation of the SPIN-screen",
+  "Pain and the Montreal Cognitive Assessment (MoCA) in Aging",
+  "Disruption of cognitive function in Fibromyalgia Syndrome",
+  "Cognitive Function Impairment in Patients with Neuropathic Pain Under Standard Conditions of Care",
+  "Validity and reliability of the clock drawing test as a screening tool for cognitive impairment in patients with fibromyalgia",
+  "Tales of the boogeyman"
+)
+
+data.frame(check_recall(important_titles, new_results[, "title"]))
+```
 
 
 
