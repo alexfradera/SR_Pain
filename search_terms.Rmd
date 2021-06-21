@@ -56,7 +56,6 @@ all_stopwords <- c(get_stopwords("English"), SR_stopwords)
 
 ```{r get_best_titles}
 S1_titles<- get_best_titles(naive_results)
-)
 S1_titles
 ```
 
@@ -67,40 +66,20 @@ S1_terms <- unique(c(S1_keywords, S1_titles))
 
 
 ### Network analysis of content
-```{r create_network}
-docs <- paste(naive_results[, "title"], naive_results[, "abstract"])
-dfm <- create_dfm(elements=docs, features=terms)
-g <- create_network(dfm, min_studies=1)
 
+We can create and visualise our content: 
+```{r testing_network_creation}
+S1_network <- create_the_network(naive_results,S1_terms)
+print_the_network(S1_network)
 ```
 
 We can now visualise this:
 
-```{r vis_network}
-
-
-network_vis<-ggraph(g, layout="stress") +
-     coord_fixed() +
-     expand_limits(x=c(-3, 3)) +
-     geom_edge_link(aes(alpha=weight)) +
-     geom_node_point(shape="circle filled", fill="white") +
-     geom_node_text(aes(label=name), hjust="outward", check_overlap=TRUE) +
-     guides(edge_alpha=FALSE)
-network_vis
-```
 
 And find the strongest links in the network (note later entries have a stronger link):
 
 ```{r network_strengths}
-
-strengths <- strength(g)
-
-data.frame(term=names(strengths), strength=strengths, row.names=NULL) %>%
-  mutate(rank=rank(strength, ties.method="min")) %>%
-  arrange(strength) ->
-  term_strengths
-
-term_strengths
+S1_net_strengths <- strengths_of_network(S1_network)
 ```
 
 
@@ -108,15 +87,7 @@ This can then be plotted against changepoints (where the network strength shifs,
 
 
 ```{r network_cutoffs}
-cutoff_fig <- ggplot(term_strengths, aes(x=rank, y=strength, label=term)) +
-  geom_line() +
-  geom_point() +
-  geom_text(data=filter(term_strengths, rank>5), hjust="right", nudge_y=20, check_overlap=TRUE)
-
-cutoff_change <- find_cutoff(g, method="changepoint", knot_num=3)
-
-cutoff_fig +
-  geom_hline(yintercept=cutoff_change, linetype="dashed")
+S1_cutoff<- find_network_cutoffs(S1_net_strengths, S1_network)
 
 ```
 
@@ -124,10 +95,10 @@ By selecting one of these changepoints the set of title-derived keywords can be 
 
 
 ```{r}
-g_redux <- reduce_graph(g, cutoff_change[1]) # tweak this number to change the cutoff option
-selected_terms <- get_keywords(g_redux)
+S1_net_redux <- reduce_graph(S1_network, cutoff_change[1]) # tweak this number to change the cutoff option
+S1_selected_terms <- get_keywords(S1_net_redux)
 
-selected_terms
+S1_selected_terms
 ```
 
 ### find some way of connecting this back with the keywords
