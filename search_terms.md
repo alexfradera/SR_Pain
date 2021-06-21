@@ -12,28 +12,12 @@ output:
 # Using litsearchr
 
 ```r
-library(litsearchr)
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
+library(readr)
+library(igraph)
+library(litsearchr)
+library(ggraph)
+library(stringr)
 packageVersion("litsearchr")
 ```
 
@@ -82,7 +66,6 @@ A bit more to do here as titles can contain many "stopwords" that are not inform
 
 
 ```r
-library(readr)
 SR_stopwords <- read_lines("SR_stopwords.txt")
 all_stopwords <- c(get_stopwords("English"), SR_stopwords)
 ```
@@ -164,14 +147,6 @@ We can now visualise this:
 
 
 ```r
-library(ggraph)
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```r
 network_vis<-ggraph(g, layout="stress") +
      coord_fixed() +
      expand_limits(x=c(-3, 3)) +
@@ -184,35 +159,8 @@ network_vis
 
 ![](search_terms_files/figure-html/vis_network-1.png)<!-- -->
 
-And find the strongest links in the network
+And find the strongest links in the network (note later entries have a stronger link):
 
-
-```r
-library(igraph)
-```
-
-```
-## 
-## Attaching package: 'igraph'
-```
-
-```
-## The following objects are masked from 'package:dplyr':
-## 
-##     as_data_frame, groups, union
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     decompose, spectrum
-```
-
-```
-## The following object is masked from 'package:base':
-## 
-##     union
-```
 
 ```r
 strengths <- strength(g)
@@ -392,6 +340,9 @@ term_strengths
 ```
 
 
+This can then be plotted against changepoints (where the network strength shifs, a bit like an eigenvalue)
+
+
 
 ```r
 cutoff_fig <- ggplot(term_strengths, aes(x=rank, y=strength, label=term)) +
@@ -406,6 +357,8 @@ cutoff_fig +
 ```
 
 ![](search_terms_files/figure-html/network_cutoffs-1.png)<!-- -->
+
+By selecting one of these changepoints the set of title-derived keywords can be reduced down:
 
 
 
@@ -433,7 +386,7 @@ selected_terms
 ```
 
 ### find some way of connecting this back with the keywords
-The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been reduced down in the network analysis, but we don't want to discard either. Also add in some starred terms from the original approach
+The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been involved in the network analysis, but we don't want to discard. Lacking expertise, the simplest thing would be to combine these with the title-derived selected terms just produced. (Also add in some starred terms from the original approach).
 
 ```r
 longlist <- unique(c(keywords, selected_terms))
@@ -507,6 +460,7 @@ longlist
 
 ## Grouping with litsearchr
 
+The recommendation is to do this by hand - pick out the terms from the list and organise them under your themes.
 
 
 ```r
@@ -665,8 +619,6 @@ Based on all the cognitive screens in the .csv file, we would need to search for
 
 
 ```r
-library(stringr)
-
 screen_full_names<- str_flatten(cog_screens$Test_Name,"\" OR \"")
 screen_abbreviations<- str_flatten(abbrevsonly$Abbreviation,"\" OR \"")
 screen_referents <- str_c("\"", screen_full_names, "\" OR \"", screen_abbreviations, "\"")
