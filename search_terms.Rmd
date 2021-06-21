@@ -21,6 +21,13 @@ library(ggraph)
 library(stringr)
 packageVersion("litsearchr")
 ```
+## Functions
+
+```{r launch_scripts, echo=FALSE, fig.show='hide', include=TRUE, warning=FALSE}
+# This is the cleaning and pre-processing described above.
+# setwd("C:/Users/Alexander Fradera/OneDrive - University of Glasgow/non-dclin/5_Code/SR_Pain/")
+ source("SR_functions.R", local = knitr::knit_global(), echo = FALSE)
+```
 
 
 ## Completing the naive search
@@ -29,10 +36,7 @@ I put into PubMed pain* AND cognit* and screen* which produced 949 results.
 Variant search: using NOT (cognit* behav* therapy) to limit the irrelevant results (659)
 I then put this into litsearchr
 
-```{r naiveresults}
-naive_results <- import_results(file="pubmed-painANDcog-set_no_CBT.nbib")
-nrow(naive_results)
-```
+
 ## Collating search keywords
 We can then have a look at the keywords - here limited to those that appear in 3 or more papers
 
@@ -164,7 +168,14 @@ grouped_terms <-list(
   screen=longlist[c(7,82,93,101)]
 )
 grouped_terms
+
 ```
+```{r temptable}
+lapply(grouped_terms, write, "test.txt", append=TRUE, ncolumns=1000)
+```
+
+
+
 
 ```{r write_shortlist, eval=FALSE, include=TRUE}
 
@@ -185,47 +196,6 @@ cat(read_file("search-inEnglish.txt"))
 
 
 \(\("chronic migraine" OR "chronic musculoskeletal pain" OR "chronic pain" OR fibromyalgia OR knee OR "low back pain" OR migraine OR "neuropathic pain" OR nociception OR pain\) AND \(cognition OR cognitive OR dementia OR "mild cognitive impairment"\) AND \(screening\)\)
-
-
-### Feeding this back in to pubmed
-
-We get a new search, which we save in as new_results:
-
-```{r import_new}
-new_results <- import_results(file="new_pubmed.nbib")
-```
-
-
-```{r find_discrepancies}
-naive_results %>%
-  mutate(in_new_results=title %in% new_results[, "title"]) ->
-  naive_results
-
-excluded_articles <- naive_results %>%
-  filter(!in_new_results) %>%
-  select(title, keywords)
-
-```
-
-```{r write_discrepancies, eval=FALSE, include=TRUE}
- write.csv(excluded_articles, file = "excluded_articles.csv")
-```
-
-
-
-
-```{r checking_importants}
-important_titles <- c(
-  "Screening for pain in patients with cognitive and communication difficulties: evaluation of the SPIN-screen",
-  "Pain and the Montreal Cognitive Assessment (MoCA) in Aging",
-  "Disruption of cognitive function in Fibromyalgia Syndrome",
-  "Cognitive Function Impairment in Patients with Neuropathic Pain Under Standard Conditions of Care",
-  "Validity and reliability of the clock drawing test as a screening tool for cognitive impairment in patients with fibromyalgia",
-  "Tales of the boogeyman"
-)
-
-data.frame(check_recall(important_titles, new_results[, "title"]))
-```
 
 
 
@@ -252,6 +222,11 @@ cog_screens <- read_csv(input_file
 
 
 # Pain search terms
+
+
+## DRAW SOMETHING FROM LITSEARCHR
+### Add further terms
+
 
 
 # Cognitive screen search terms
@@ -298,4 +273,64 @@ s_screen_abstract <-  str_c("AB (",screen_referents,")")
   s_screen_testmeasures  <-  str_c("TM (",screen_referents,")")
 
 ```
+
+
+# Finalise everything
+
+```{r write_shortlist2, eval=FALSE, include=TRUE}
+
+# record this search into a text file
+final_search <- write_search(
+  TO_DEFINE,
+  languages="English",
+  exactphrase=TRUE,
+  stemming=FALSE, # DECISION: stem or not stem?
+  closure="left",
+  writesearch=FALSE
+)
+
+final_search
+```
+
+### Feeding this back in to pubmed
+
+We get a new search, which we save in as new_results:
+
+```{r import_new}
+new_results <- import_results(file="new_pubmed.nbib")
+```
+
+
+```{r find_discrepancies}
+naive_results %>%
+  mutate(in_new_results=title %in% new_results[, "title"]) ->
+  naive_results
+
+excluded_articles <- naive_results %>%
+  filter(!in_new_results) %>%
+  select(title, keywords)
+
+```
+
+```{r write_discrepancies, eval=FALSE, include=TRUE}
+ write.csv(excluded_articles, file = "excluded_articles.csv")
+```
+
+
+
+
+```{r checking_importants}
+important_titles <- c(
+  "Screening for pain in patients with cognitive and communication difficulties: evaluation of the SPIN-screen",
+  "Pain and the Montreal Cognitive Assessment (MoCA) in Aging",
+  "Disruption of cognitive function in Fibromyalgia Syndrome",
+  "Cognitive Function Impairment in Patients with Neuropathic Pain Under Standard Conditions of Care",
+  "Validity and reliability of the clock drawing test as a screening tool for cognitive impairment in patients with fibromyalgia",
+  "Tales of the boogeyman"
+)
+
+data.frame(check_recall(important_titles, new_results[, "title"]))
+```
+
+
 
