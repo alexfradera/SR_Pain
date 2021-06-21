@@ -32,16 +32,15 @@ packageVersion("litsearchr")
 
 ## Completing the naive search
 
-I put into PubMed pain* AND cognit* and screen* which produced 949 results.
-Variant search: using NOT (cognit* behav* therapy) to limit the irrelevant results (659)
-I then put this into litsearchr
+Completed a main search for PubMed pain* AND cognit* and screen* which produced 949 results, and then amended using NOT (cognit* behav* therapy) to limit the irrelevant results (659). I then put this into litsearchr. NB I then found further variant searches and approached these as well.
 
 
 ## Collating search keywords
 We can then have a look at the keywords - here limited to those that appear in 3 or more papers
 
 ```{r get_keywords}
-keywords <- extract_terms(keywords=naive_results[, "keywords"], method="tagged", min_n=1, min_freq = 3)
+S1_keywords <-term_extractor(naive_results,1,3)
+S1_keywords
 ```
 
 ## Collating search title content
@@ -56,19 +55,14 @@ all_stopwords <- c(get_stopwords("English"), SR_stopwords)
 ```
 
 ```{r get_best_titles}
-title_terms <- extract_terms(
-  text=naive_results[, "title"],
-  method="fakerake",
-  min_freq=3, min_n=2,
-  stopwords=all_stopwords
+S1_titles<- get_best_titles(naive_results)
 )
-
-title_terms
+S1_titles
 ```
 
 We can combine these useful title terms with keywords, removing duplicates:
 ```{r combined_terms}
-terms <- unique(c(keywords, title_terms))
+S1_terms <- unique(c(S1_keywords, S1_titles))
 ```
 
 
