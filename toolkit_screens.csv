@@ -1,0 +1,15 @@
+test_name,abbreviation,abbreviation_alt,context,scale_overview,reference
+Addenbrooke's Cognitive Examination,ACE,,Memory Clinic,,"Mathuranath, Nestor, Berrios, Rakowicz, & Hodges, 2000)"
+Addenbrooke's Cognitive Examination Revised,ACE-R,,Memory Clinic,,"Mioshi, Dawson, Mitchell, Arnold, & Hodges, 2006)"
+Mini-ACE,M-ACE,,,,
+Abbreviated Mental Test,AMT,AMTS,"Primary Care, Acute Care, Care Homes",A 10-item scale. validated in wards but used in UK primary care.,Hodkinson 1972
+Mini-Cog,Mini-Cog,,Primary Care,3-item word memory and clock drawing. Validated in primary care. Low sensitivity.,"(Borson, Scanlan, Brush, Vitaliano, & Dokmak, 2000)"
+Addenbrooke's Cognitive Examination - III,ACE-III,ACE-3,Memory Clinic,Based on the ACE-R which is the wellvalidated longer version with very similar characteristics.,Int J Geriatr Psychiatry. 2012 Jul;27(7):659-69. doi: 10.1002/gps.2771. Epub 2011 Nov 8.
+Montreal Cognitive Assessment ,MoCA,,"Memory Clinic, Care Homes","Tasks are executive function and attention, with some language, memory and visuospatial skills. Validated in MCI in memory clinics and Parkinson’s disease dementia.","Nasreddine et al., 2003"
+Mini Mental State Examination,MMSE,,Memory Clinic,"This 11-item measure of cognitive functioning and its change, is extensively studied and has good validity. Less good for Lewy body dementia and frontotemporal dementia due to its focus on memory. Cutpoint not valid in different cultures and in particularly highly or uneducated participants.","Folstein et al., 1975"
+6-item cognitive impairment test,6CIT,,"Acute Care, Care Homes","Three orientation items, count backwards from 20, months of the year in reverse order, and learn an address. Validated in primary care.",
+Hopkins Verbal Learning Test,HVLT,,NONE,"HVLT assesses verbal recall and recognition with three learning/free-recall trials, followed by a recognition trial. It has six equivalent forms, for reliable re-testing even at short intervals and takes under 10 minutes. It does not have ceiling effects and is not sensitive to educational levels. ",
+Hopkins Verbal Learning Test Revised,HVLT-R,,,,
+Test for the early detection of dementia,TE4D-Cog,,NONE,"Initially developed in Germany (known as TFDD), TE4D-Cog was modified for use in an Englishspeaking population. This eight-item test takes about 10 minutes. It is scored out of 45 on immediate recall, semantic memory, clock drawing test, category fluency, orientation to time and ideomotor praxis. ",
+Severe Impairment battery,SiB7,SIB,NONE,"The SiB7 takes 10 to 15 minutes to complete. It was derived from analysing the data from people who had completed the full SIB whose MMSE scores 
+ranged from 5-7. It avoids the floor effect of the MMSE and so is useful for assessment where cognition is severely impaired.",

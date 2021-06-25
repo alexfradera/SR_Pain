@@ -1,14 +1,13 @@
 
-library(litsearchr)
 library(tools)
+library(dplyr)
+library(readr)
+library(igraph)
+library(litsearchr)
+library(ggraph)
+library(stringr)
+packageVersion("litsearchr")
 
-
-# Collects all the .nbib files in the wd and outputs them as dataframes
-fileNames <- Sys.glob("*.nbib")
-for (fileName in fileNames) {
-  sample <- import_results(file=fileName)
-  assign(paste0(file_path_sans_ext(fileName)),sample)
-}
 
 
   
@@ -70,9 +69,15 @@ find_network_cutoffs <- function(termstrengths,network){
   
   cutoff_change <- find_cutoff(network, method="changepoint", knot_num=3)
   
-  cutoff_fig +
-    geom_hline(yintercept=cutoff_change, linetype="dashed")
+  return(list(cutoff_change, cutoff_fig +
+    geom_hline(yintercept=cutoff_change, linetype="dashed")))
   
 }
+
+clean_nas <- function(varb){
+    dplyr::pull(varb) 
+
+}
+
 
 
