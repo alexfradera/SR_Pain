@@ -79,5 +79,12 @@ clean_nas <- function(varb){
 
 }
 
+update_name <- function(varb){
+  arg_name <- deparse(substitute(varb))
+  assign(paste0(prefix,"_",arg_name),varb, envir = .GlobalEnv)
+}
 
 
+
+  
+assign(paste0(prefix,"_",deparse(substitute(keywords))),keywords)
