@@ -84,7 +84,3 @@ update_name <- function(varb){
   assign(paste0(prefix,"_",arg_name),varb, envir = .GlobalEnv)
 }
 
-
-
-  
-assign(paste0(prefix,"_",deparse(substitute(keywords))),keywords)

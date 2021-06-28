@@ -119,7 +119,7 @@ for (fileName in fileNames) {
 Now choose which search to use, and define a prefix for all terms you produce that **matches that search**.
 
 
-```{r choose search}
+```{r choose_search}
 focus <-SEARCH_3
 prefix <- "S3"
 ```
@@ -184,13 +184,17 @@ net_outputs<- find_network_cutoffs(update_name(net_strengths), update_name(netwo
 cutoff <- unlist(net_outputs[1])
 update_name(cutoff)
 net_outputs[2]
+
 ```
 
 By selecting one of these changepoints the set of title-derived keywords can be reduced down:
 
 
-```{r}
-net_redux <- reduce_graph(update_name(network), cutoff[1]) # tweak this number to change the cutoff option. NB this cutoff variable is the one time I haven't invoked update_name as I'm not sure how to subset within it.
+```{r trim_network}
+cutoff_level <- 1 # NB set this explicitly higher or lower, it will be recorded elsewhere.
+network_levels <- paste("Network cutoff for",prefix, "is", cutoff_level)
+write(network_levels,"network_levels.txt")
+net_redux <- reduce_graph(update_name(network), cutoff[cutoff_level]) 
 selected_terms <- get_keywords(net_redux)
 selected_terms
 update_name(selected_terms)
@@ -198,6 +202,9 @@ update_name(selected_terms)
 
 ### find some way of connecting this back with the keywords
 The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been involved in the network analysis, but we don't want to discard. Lacking expertise, the simplest thing would be to combine these with the title-derived selected terms just produced. (Also add in some starred terms from the original approach).
+
+These then are combined into a text output for manual review and to be placed into 
+
 ```{r longlist}
 
 
@@ -206,108 +213,5 @@ longlist <- unique(c(update_name(keywords), update_name(selected_terms)))
 readr::write_lines(longlist, paste0(prefix, "_possible_terms",".txt"))
 
 ```
-
-
-
-
-## Grouping with litsearchr
-
-The recommendation is to do this by hand - pick out the terms from the list and organise them under your themes. For simplicity I think this is easier to do outside of the R environment (hence extracting terms in the X_possible_terms.txt
-
-
-
-
-
-```{r write_shortlist, eval=FALSE, include=TRUE}
-
-# record this search into a text file
-write_search(
-  grouped_terms,
-  languages="English",
-  exactphrase=TRUE,
-  stemming=FALSE, # DECISION: stem or not stem?
-  closure="left",
-  writesearch=TRUE
-)
-
-cat(read_file("search-inEnglish.txt"))
-```
-
-
-
-
-\(\("chronic migraine" OR "chronic musculoskeletal pain" OR "chronic pain" OR fibromyalgia OR knee OR "low back pain" OR migraine OR "neuropathic pain" OR nociception OR pain\) AND \(cognition OR cognitive OR dementia OR "mild cognitive impairment"\) AND \(screening\)\)
-
-*Note:* in fact some of the screeners names will need to be amended with wildcards.
-
-## Putting search terms into readable contexts
-
-### EBSCO Host
-
-```{r make_ebsco_friendly}
-s_screen_title <-  str_c("TI (",screen_referents,")")
-s_screen_abstract <-  str_c("AB (",screen_referents,")")
-  s_screen_testmeasures  <-  str_c("TM (",screen_referents,")")
-
-```
-
-
-# Finalise everything
-
-```{r write_shortlist2, eval=FALSE, include=TRUE}
-
-# record this search into a text file
-final_search <- write_search(
-  TO_DEFINE,
-  languages="English",
-  exactphrase=TRUE,
-  stemming=FALSE, # DECISION: stem or not stem?
-  closure="left",
-  writesearch=FALSE
-)
-
-final_search
-```
-
-### Feeding this back in to pubmed
-
-We get a new search, which we save in as new_results:
-
-```{r import_new}
-new_results <- import_results(file="new_pubmed.nbib")
-```
-
-
-```{r find_discrepancies}
-focus %>%
-  mutate(in_new_results=title %in% new_results[, "title"]) ->
-  focus
-
-excluded_articles <- focus %>%
-  filter(!in_new_results) %>%
-  select(title, keywords)
-
-```
-
-```{r write_discrepancies, eval=FALSE, include=TRUE}
- write.csv(excluded_articles, file = "excluded_articles.csv")
-```
-
-
-
-
-```{r checking_importants}
-important_titles <- c(
-  "Screening for pain in patients with cognitive and communication difficulties: evaluation of the SPIN-screen",
-  "Pain and the Montreal Cognitive Assessment (MoCA) in Aging",
-  "Disruption of cognitive function in Fibromyalgia Syndrome",
-  "Cognitive Function Impairment in Patients with Neuropathic Pain Under Standard Conditions of Care",
-  "Validity and reliability of the clock drawing test as a screening tool for cognitive impairment in patients with fibromyalgia",
-  "Tales of the boogeyman"
-)
-
-data.frame(check_recall(important_titles, new_results[, "title"]))
-```
-
 
 
