@@ -49,7 +49,7 @@ cog_screens <- read_csv(input_file
 
 
 
-I'm drawing from a shortlist which contains names and abbreviations. Firstly, pull into R and remove abbreviations (NB clunky):
+I'm drawing from a shortlist which contains names and abbreviations. Firstly, pull into R and remove n/a's in abbreviations (NB clunky):
 
 ```{r make_abbreviation_vector, include=FALSE}
 
@@ -83,7 +83,7 @@ screen_referents <- str_c("\"", "cognitive screen*",  "\" OR \"", screen_all_nam
 
 The provisional search terms are thus: 
 
-`r screen_referents`
+`r screen_referents`.
 
 These may be improved in the next stages.
 
@@ -116,13 +116,15 @@ for (fileName in fileNames) {
 }
 
 ```
-Now choose which search to use, and define a prefix for all terms you produce that **matches that search**.
+Now choose which search to use, and define a prefix for all terms you produce that **matches that search**. 
 
 
 ```{r choose_search}
-focus <-SEARCH_3
-prefix <- "S3"
+focus <-SEARCH_2
+prefix <- "S2"
 ```
+
+In this example: *search 2*, for cognitive-screen terms.
 
 ## 2. Use litsearchr to collate keywords
 

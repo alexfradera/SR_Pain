@@ -1,1 +1,1 @@
-Network cutoff for S3 is 1
+Network cutoff for S2 is 1

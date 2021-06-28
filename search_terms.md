@@ -10,6 +10,7 @@ output:
 
 
 
+
 ```
 ## 
 ## Attaching package: 'dplyr'
@@ -76,7 +77,7 @@ The second terms may especially benefit from considering further linked terms.
 
 
 
-I'm drawing from a shortlist which contains names and abbreviations. Firstly, pull into R and remove abbreviations (NB clunky):
+I'm drawing from a shortlist which contains names and abbreviations. Firstly, pull into R and remove n/a's in abbreviations (NB clunky):
 
 
 
@@ -96,7 +97,7 @@ screen_referents <- str_c("\"", "cognitive screen*",  "\" OR \"", screen_all_nam
 
 The provisional search terms are thus: 
 
-"cognitive screen*" OR "Addenbrooke's Cognitive Examination" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini-ACE" OR "Abbreviated Mental Test" OR "Mini-Cog" OR "Addenbrooke's Cognitive Examination - III" OR "Montreal Cognitive Assessment" OR "Mini Mental State Examination" OR "6-item cognitive impairment test" OR "Hopkins Verbal Learning Test" OR "Hopkins Verbal Learning Test Revised" OR "Test for the early detection of dementia" OR "Test your memory test" OR "AMTS" OR "ACE-3" OR "ACE" OR "ACE-R" OR "M-ACE" OR "AMT" OR "Mini-Cog" OR "ACE-III" OR "MoCA" OR "MMSE" OR "6CIT" OR "HVLT" OR "HVLT-R" OR "TE4D-Cog" OR "TYM"
+"cognitive screen*" OR "Addenbrooke's Cognitive Examination" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini-ACE" OR "Abbreviated Mental Test" OR "Mini-Cog" OR "Addenbrooke's Cognitive Examination - III" OR "Montreal Cognitive Assessment" OR "Mini Mental State Examination" OR "6-item cognitive impairment test" OR "Hopkins Verbal Learning Test" OR "Hopkins Verbal Learning Test Revised" OR "Test for the early detection of dementia" OR "Test your memory test" OR "AMTS" OR "ACE-3" OR "ACE" OR "ACE-R" OR "M-ACE" OR "AMT" OR "Mini-Cog" OR "ACE-III" OR "MoCA" OR "MMSE" OR "6CIT" OR "HVLT" OR "HVLT-R" OR "TE4D-Cog" OR "TYM".
 
 These may be improved in the next stages.
 
@@ -134,14 +135,16 @@ for (fileName in fileNames) {
 ## Reading file SEARCH_2.nbib ... done
 ## Reading file SEARCH_3.nbib ... done
 ```
-Now choose which search to use, and define a prefix for all terms you produce that **matches that search**.
+Now choose which search to use, and define a prefix for all terms you produce that **matches that search**. 
 
 
 
 ```r
-focus <-SEARCH_3
-prefix <- "S3"
+focus <-SEARCH_2
+prefix <- "S2"
 ```
+
+In this example: *search 2*, for cognitive-screen terms.
 
 ## 2. Use litsearchr to collate keywords
 
@@ -239,55 +242,40 @@ selected_terms
 ```
 
 ```
-##  [1] "adverse events"              "aged"                       
-##  [3] "aging"                       "analgesia"                  
-##  [5] "analgesic"                   "analgesics"                 
-##  [7] "anesthesia"                  "anxiety"                    
-##  [9] "arthroplasty"                "back pain"                  
-## [11] "block"                       "cancer"                     
-## [13] "child"                       "children"                   
-## [15] "chronic"                     "chronic pain"               
-## [17] "clinical"                    "clinical outcomes"          
-## [19] "clinical trial"              "clinical trials"            
-## [21] "comfort"                     "complication"               
-## [23] "complications"               "depression"                 
-## [25] "disability"                  "education"                  
-## [27] "effectiveness"               "efficacy"                   
-## [29] "exercise"                    "function"                   
-## [31] "fusion"                      "head"                       
-## [33] "hip"                         "infection"                  
-## [35] "injection"                   "injections"                 
-## [37] "intervention"                "knee"                       
-## [39] "knee osteoarthritis"         "local"                      
-## [41] "low back pain"               "lumbar"                     
-## [43] "methods"                     "morphine"                   
-## [45] "nausea"                      "opioid"                     
-## [47] "osteoarthritis"              "outcome"                    
-## [49] "outcomes"                    "pain"                       
-## [51] "pain management"             "pain relief"                
-## [53] "placebo"                     "postoperative"              
-## [55] "postoperative pain"          "protocol"                   
-## [57] "qol"                         "quality of life"            
-## [59] "randomised controlled trial" "randomized"                 
-## [61] "randomized clinical trial"   "randomized controlled trial"
-## [63] "range of motion"             "rct"                        
-## [65] "rehabilitation"              "safety"                     
-## [67] "satisfaction"                "shoulder"                   
-## [69] "side effects"                "steroid"                    
-## [71] "strength"                    "stress"                     
-## [73] "surgery"                     "symptoms"                   
-## [75] "therapy"                     "treatment"                  
-## [77] "trial"                       "ultrasound"                 
-## [79] "ultrasound-guided"           "vas"                        
-## [81] "visual analog scale"         "visual analogue scale"      
-## [83] "women"                       "blind randomized"           
-## [85] "clinical outcome"            "controlled clinical"        
-## [87] "controlled clinical trial"   "controlled trial"           
-## [89] "opioid consumption"          "outcome measures"           
-## [91] "patients undergoing"         "placebo-controlled trial"   
-## [93] "prospective randomized"      "randomized clinical"        
-## [95] "randomized control"          "randomized controlled"      
-## [97] "randomized trial"
+##  [1] "ace"                           "activities of daily living"   
+##  [3] "aged"                          "aging"                        
+##  [5] "alzheimer's disease"           "angiotensin-converting enzyme"
+##  [7] "attention"                     "balance"                      
+##  [9] "biomarker"                     "blood pressure"               
+## [11] "brain"                         "cancer"                       
+## [13] "cardiovascular"                "clinical trial"               
+## [15] "cognition"                     "cognitive"                    
+## [17] "cognitive decline"             "cognitive dysfunction"        
+## [19] "cognitive function"            "cognitive functions"          
+## [21] "cognitive impairment"          "cognitive training"           
+## [23] "community-dwelling"            "dementia"                     
+## [25] "depression"                    "diabetes"                     
+## [27] "efficacy"                      "elderly"                      
+## [29] "executive function"            "exercise"                     
+## [31] "intervention"                  "mci"                          
+## [33] "memory"                        "mild cognitive impairment"    
+## [35] "mini-mental state examination" "mini mental state examination"
+## [37] "mmse"                          "moca"                         
+## [39] "montreal cognitive assessment" "mortality"                    
+## [41] "mri"                           "older adults"                 
+## [43] "outcome"                       "prevention"                   
+## [45] "quality of life"               "randomised controlled trial"  
+## [47] "randomized controlled trial"   "randomized trial"             
+## [49] "rct"                           "rehabilitation"               
+## [51] "safety"                        "stroke"                       
+## [53] "surgery"                       "survival"                     
+## [55] "systolic"                      "treatment"                    
+## [57] "trial"                         "controlled trial"             
+## [59] "converting enzyme"             "daily living"                 
+## [61] "elderly patients"              "mini-mental state"            
+## [63] "placebo-controlled trial"      "randomized clinical"          
+## [65] "randomized clinical trial"     "randomized control"           
+## [67] "randomized controlled"         "state examination"
 ```
 
 ```r
