@@ -10,18 +10,60 @@ output:
 
 
 
-# Population search terms
-Not sure about this: do we need to specify Adult or just use in exclusion criteria?
 
+```
+## 
+## Attaching package: 'dplyr'
+```
 
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
 
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
 
+```
+## 
+## Attaching package: 'igraph'
+```
 
+```
+## The following objects are masked from 'package:dplyr':
+## 
+##     as_data_frame, groups, union
+```
 
+```
+## The following objects are masked from 'package:stats':
+## 
+##     decompose, spectrum
+```
 
+```
+## The following object is masked from 'package:base':
+## 
+##     union
+```
 
+```
+## Loading required package: ggplot2
+```
 
-# Pain search terms
+# Overall search approach:
+
+There are two fundamental terms to link: 
+
+1) Terms describing a selection of cognitive screens (predefined by [Alzheimer's Society Cognitive Assessment Toolkit (pdf)](https://www.alz.org/getmedia/9687d51e-641a-43a1-a96b-b29eb00e72bb/cognitive-assessment-toolkit))
+2) A set of terms that relate to chronic or clinically measurable pain
+
+THe first terms are fairly clear but must be accompanied by a broader term that surfaces articles that may use one or more cognitive screens but not mention which in title/abstract
+The second terms may especially benefit from considering further linked terms.
 
 
 # Cognitive screen search terms
@@ -34,31 +76,235 @@ Not sure about this: do we need to specify Adult or just use in exclusion criter
 
 
 
-## Raw search terms
+
+I'm drawing from a shortlist which contains names and abbreviations. Firstly, pull into R and remove abbreviations (NB clunky):
 
 
-Based on all the cognitive screens in the .csv file, we would need to search for these test names and referents.
+
+Next put them into a readable form, separated by ORs.
 
 
 ```r
-library(stringr)
-
-test_full_names<- str_flatten(cog_screens$Test_Name,"\" OR \"")
-test_abbreviations<- str_flatten(abbrevsonly$Abbreviation,"\" OR \"")
-test_referents <- str_c("\"", test_full_names, "\" OR \"", test_abbreviations, "\"")
- writeLines(test_referents)
+screen_all_names<- str_flatten(all_names,"\" OR \"")
+screen_abbreviations<- str_flatten(all_abbrevs,"\" OR \"")
+screen_referents <- str_c("\"", "cognitive screen*",  "\" OR \"", screen_all_names, "\" OR \"", screen_abbreviations, "\"")
+ writeLines(screen_referents)
 ```
 
 ```
-## "Clinical Dementia Rating Scale" OR "Extended Scale for Dementia" OR "Category Fluency - Set Test" OR "Cognisyst" OR "Alzheimer's Staging Scale" OR "Yokota Memory Test" OR "Confusion Assessment Method" OR "Trail making Test" OR "Cognitive Section of CAMDEX" OR "Functional Assessment Test" OR "Mental Alternation test" OR "Category and Letter Fluency" OR "Cognitive Drug Research" OR "Cognitive Screening Test" OR "Ottowa Mental Status Exam" OR "Rowland Universal Dementia Assessment Scale" OR "AD8" OR "CNS Vital Signs" OR "Cog Screen" OR "Cognitive Stability Index" OR "Cognitive Stability Index" OR "Cognometer" OR "Computer-Administered Neuropsychological Screen for Mild Cognitive Impairment (NB BATTERY)" OR "Global Clinical Scale" OR "Global Deterioration Scale" OR "Halifax Mental Status Scale" OR "Interactive-Voice Recognition Dementia Screen" OR "Mattis Dementia Rating Scale" OR "Medical Care Corporation" OR "Medical Decision Logic, Inc" OR "MemTrax" OR "MicroCog" OR "Milan Overall Dementia Assessment" OR "NetMet" OR "Neurotrax" OR "CogTest" OR "Cognistat" OR "Telephone Brief Screen for Cognitive Impairment" OR "Telephone-assessed Mental State" OR "Temporal Orientation" OR "St. Louis University Mental Status Examination" OR "Three words three shapes" OR "Brief Cognitive Rating Scale" OR "AB Cognitive Screen" OR "Brief Cognitive Scale" OR "Dementia Questionnaire" OR "Deterioration Cognitive Observee" OR "Modified WORLD Test" OR "Montpelier Screen" OR "Neurobehavioral Cognitive Status Examination OR Cognistat" OR "Rotterdam Version of the Cambridge Cognitive Examination" OR "Short Memory Questionnaire" OR "Short Portable Mental Status Questionnaire" OR "Symptoms of Dementia Screener" OR "Three Word Recall" OR "Minnesota Cognitive Acuity Screen" OR "CANS-MCI" OR "Extended Mini-Mental Assessment" OR "Telephone Interview of Cognitive Status-Modified" OR "Cognosis" OR "Cogstate" OR "MMSE-telephone version" OR "Rapid Dementia Screening Test" OR "Blessed Memory Test/Category Fluency" OR "Brief Alzheimer Screen" OR "Clifton Assessment Procedures for the Elderly - Cognitive Assessment Scale" OR "Delayed Word Recall Test" OR "Efficient Office-Based Assessment of Cognition" OR "Mild cognitive impairment screen" OR "Mini-Cog" OR "Short Cognitive Evaluation Battery" OR "Short Orientation Memory Concentration Test" OR "Six Item Screener" OR "Ten-item free recall with serial position effect analysis" OR "7-Minute Screen" OR "Cognitive Abilities Screening Instrument" OR "Cognitive Assessment Screening Test" OR "DemTect" OR "Short and Sweet Screening Instrument" OR "Time and Change" OR "Clock Drawing Test- Shulman" OR "Clock Drawing Test- Sunderland" OR "Informant Questionnaire on Cognitive Decline in the Elderly - Short Form" OR "Abbreviated Mental Test" OR "General Practitioner Assessment of Cognition" OR "Verbal Fluency" OR "Modified Mini-mental state examination" OR "Addenbrooke's Cognitive Examination" OR "Alzheimer Disease Assessment Scale Cognitive Subscale" OR "Benton's Visual Retention Test" OR "Chinese Abbreviated Mild Cognitive Impairment Test" OR "Isaacs Set Test" OR "Revised Hasegawa's Dementia Scale" OR "Standardized Mini-Mental State Examination" OR "Cognitive Capacity Screening Examination" OR "Short Test of Mental Status" OR "Montreal Cognitive Assessment" OR "Informant Questionnaire on Cognitive Decline in the Elderly" OR "Memory Impairment Screen" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini Mental State Examination" OR "Indiana University Telephone-Based Assessment of Neuropsychological Status" OR "IntegNeuro" OR "Hopkins Verbal Learning Test" OR "High Sensitivity Cognitive Screen" OR "Cambridge Cognitive Examination" OR "The Repeatable Battery for the Assessment of Neuropsychological Status" OR "Visual association test" OR "Mini-ACE" OR "TELE" OR "CDR" OR "TMT" OR "CAMDEX" OR "AD8" OR "DRS" OR "SLU" OR "ABCS" OR "BCS" OR "DQ" OR "DECO" OR "WORLD" OR "Mont" OR "NCSE" OR "R-CAMCOG" OR "SMQ" OR "SPMSQ" OR "SDS" OR "3WR" OR "MCAS" OR "CANS-MCI" OR "EMA" OR "TICS-M" OR "RDST" OR "BAS" OR "Mini-Cog" OR "S-OMC, 6-CIT, Short Blessed Test" OR "SIS" OR "7MS" OR "CASI" OR "CAST" OR "DemTect" OR "SASSI" OR "T&C" OR "CDT" OR "CDT" OR "IQCODE-SF" OR "AMT" OR "GPCOG" OR "3MS" OR "ACE" OR "ADAS-cog" OR "BVRT" OR "CAMCI" OR "IST" OR "HDS-R" OR "S-MMSE" OR "CCSE" OR "STMS" OR "MoCA" OR "IQCODE" OR "MIS" OR "ACE-R" OR "MMSE" OR "HVLT" OR "CAMCOG" OR "M-ACE"
+## "cognitive screen*" OR "Addenbrooke's Cognitive Examination" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini-ACE" OR "Abbreviated Mental Test" OR "Mini-Cog" OR "Addenbrooke's Cognitive Examination - III" OR "Montreal Cognitive Assessment" OR "Mini Mental State Examination" OR "6-item cognitive impairment test" OR "Hopkins Verbal Learning Test" OR "Hopkins Verbal Learning Test Revised" OR "Test for the early detection of dementia" OR "Test your memory test" OR "AMTS" OR "ACE-3" OR "ACE" OR "ACE-R" OR "M-ACE" OR "AMT" OR "Mini-Cog" OR "ACE-III" OR "MoCA" OR "MMSE" OR "6CIT" OR "HVLT" OR "HVLT-R" OR "TE4D-Cog" OR "TYM"
 ```
-In other words:
 
-"Clinical Dementia Rating Scale" OR "Extended Scale for Dementia" OR "Category Fluency - Set Test" OR "Cognisyst" OR "Alzheimer's Staging Scale" OR "Yokota Memory Test" OR "Confusion Assessment Method" OR "Trail making Test" OR "Cognitive Section of CAMDEX" OR "Functional Assessment Test" OR "Mental Alternation test" OR "Category and Letter Fluency" OR "Cognitive Drug Research" OR "Cognitive Screening Test" OR "Ottowa Mental Status Exam" OR "Rowland Universal Dementia Assessment Scale" OR "AD8" OR "CNS Vital Signs" OR "Cog Screen" OR "Cognitive Stability Index" OR "Cognitive Stability Index" OR "Cognometer" OR "Computer-Administered Neuropsychological Screen for Mild Cognitive Impairment (NB BATTERY)" OR "Global Clinical Scale" OR "Global Deterioration Scale" OR "Halifax Mental Status Scale" OR "Interactive-Voice Recognition Dementia Screen" OR "Mattis Dementia Rating Scale" OR "Medical Care Corporation" OR "Medical Decision Logic, Inc" OR "MemTrax" OR "MicroCog" OR "Milan Overall Dementia Assessment" OR "NetMet" OR "Neurotrax" OR "CogTest" OR "Cognistat" OR "Telephone Brief Screen for Cognitive Impairment" OR "Telephone-assessed Mental State" OR "Temporal Orientation" OR "St. Louis University Mental Status Examination" OR "Three words three shapes" OR "Brief Cognitive Rating Scale" OR "AB Cognitive Screen" OR "Brief Cognitive Scale" OR "Dementia Questionnaire" OR "Deterioration Cognitive Observee" OR "Modified WORLD Test" OR "Montpelier Screen" OR "Neurobehavioral Cognitive Status Examination OR Cognistat" OR "Rotterdam Version of the Cambridge Cognitive Examination" OR "Short Memory Questionnaire" OR "Short Portable Mental Status Questionnaire" OR "Symptoms of Dementia Screener" OR "Three Word Recall" OR "Minnesota Cognitive Acuity Screen" OR "CANS-MCI" OR "Extended Mini-Mental Assessment" OR "Telephone Interview of Cognitive Status-Modified" OR "Cognosis" OR "Cogstate" OR "MMSE-telephone version" OR "Rapid Dementia Screening Test" OR "Blessed Memory Test/Category Fluency" OR "Brief Alzheimer Screen" OR "Clifton Assessment Procedures for the Elderly - Cognitive Assessment Scale" OR "Delayed Word Recall Test" OR "Efficient Office-Based Assessment of Cognition" OR "Mild cognitive impairment screen" OR "Mini-Cog" OR "Short Cognitive Evaluation Battery" OR "Short Orientation Memory Concentration Test" OR "Six Item Screener" OR "Ten-item free recall with serial position effect analysis" OR "7-Minute Screen" OR "Cognitive Abilities Screening Instrument" OR "Cognitive Assessment Screening Test" OR "DemTect" OR "Short and Sweet Screening Instrument" OR "Time and Change" OR "Clock Drawing Test- Shulman" OR "Clock Drawing Test- Sunderland" OR "Informant Questionnaire on Cognitive Decline in the Elderly - Short Form" OR "Abbreviated Mental Test" OR "General Practitioner Assessment of Cognition" OR "Verbal Fluency" OR "Modified Mini-mental state examination" OR "Addenbrooke's Cognitive Examination" OR "Alzheimer Disease Assessment Scale Cognitive Subscale" OR "Benton's Visual Retention Test" OR "Chinese Abbreviated Mild Cognitive Impairment Test" OR "Isaacs Set Test" OR "Revised Hasegawa's Dementia Scale" OR "Standardized Mini-Mental State Examination" OR "Cognitive Capacity Screening Examination" OR "Short Test of Mental Status" OR "Montreal Cognitive Assessment" OR "Informant Questionnaire on Cognitive Decline in the Elderly" OR "Memory Impairment Screen" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini Mental State Examination" OR "Indiana University Telephone-Based Assessment of Neuropsychological Status" OR "IntegNeuro" OR "Hopkins Verbal Learning Test" OR "High Sensitivity Cognitive Screen" OR "Cambridge Cognitive Examination" OR "The Repeatable Battery for the Assessment of Neuropsychological Status" OR "Visual association test" OR "Mini-ACE" OR "TELE" OR "CDR" OR "TMT" OR "CAMDEX" OR "AD8" OR "DRS" OR "SLU" OR "ABCS" OR "BCS" OR "DQ" OR "DECO" OR "WORLD" OR "Mont" OR "NCSE" OR "R-CAMCOG" OR "SMQ" OR "SPMSQ" OR "SDS" OR "3WR" OR "MCAS" OR "CANS-MCI" OR "EMA" OR "TICS-M" OR "RDST" OR "BAS" OR "Mini-Cog" OR "S-OMC, 6-CIT, Short Blessed Test" OR "SIS" OR "7MS" OR "CASI" OR "CAST" OR "DemTect" OR "SASSI" OR "T&C" OR "CDT" OR "CDT" OR "IQCODE-SF" OR "AMT" OR "GPCOG" OR "3MS" OR "ACE" OR "ADAS-cog" OR "BVRT" OR "CAMCI" OR "IST" OR "HDS-R" OR "S-MMSE" OR "CCSE" OR "STMS" OR "MoCA" OR "IQCODE" OR "MIS" OR "ACE-R" OR "MMSE" OR "HVLT" OR "CAMCOG" OR "M-ACE"
+The provisional search terms are thus: 
+
+"cognitive screen*" OR "Addenbrooke's Cognitive Examination" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini-ACE" OR "Abbreviated Mental Test" OR "Mini-Cog" OR "Addenbrooke's Cognitive Examination - III" OR "Montreal Cognitive Assessment" OR "Mini Mental State Examination" OR "6-item cognitive impairment test" OR "Hopkins Verbal Learning Test" OR "Hopkins Verbal Learning Test Revised" OR "Test for the early detection of dementia" OR "Test your memory test" OR "AMTS" OR "ACE-3" OR "ACE" OR "ACE-R" OR "M-ACE" OR "AMT" OR "Mini-Cog" OR "ACE-III" OR "MoCA" OR "MMSE" OR "6CIT" OR "HVLT" OR "HVLT-R" OR "TE4D-Cog" OR "TYM"
+
+These may be improved in the next stages.
+
+# Pain terms
+based on a cursory search I came up with "pain OR fibromyalgia OR migraine OR neuropathic". Hopefully we can improve this in the next stages.
+
+# Litsearchr term identification process
+
+To improve our search terms we can identify keywords from Litsearchr.
+
+## 1. Conduct naive searches
+Complete one or more searches of interest. This should be done in a way that produces a *.nbib file. Eg in PubMed complete your search and then select "Send To" citation manager. Put the saved file in your project folder.
+
+SEARCH_1 I searched PubMed pain* AND cognit* AND screen* which produced 949 results. NB this deviates from the search structure outlined above as I have separated cognition and screen here - acceptable at this information-gathering stage. Also, I then decided to amend using NOT (cognit* behav* therapy) to limit  irrelevant results about CBT (659 results).
+
+SEARCH_2 looks at cognitive screen terms using the terms identified above: "cognitive screen*" OR "Addenbrooke's Cognitive Examination" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini-ACE" OR "Abbreviated Mental Test" OR "Mini-Cog" OR "Addenbrooke's Cognitive Examination - III" OR "Montreal Cognitive Assessment" OR "Mini Mental State Examination" OR "6-item cognitive impairment test" OR "Hopkins Verbal Learning Test" OR "Hopkins Verbal Learning Test Revised" OR "Test for the early detection of dementia" OR "Severe Impairment battery" OR "AMTS" OR "ACE-3" OR "SIB" OR "ACE" OR "ACE-R" OR "M-ACE" OR "AMT" OR "Mini-Cog" OR "ACE-III" OR "MoCA" OR "MMSE" OR "6CIT" OR "HVLT" OR "HVLT-R" OR "TE4D-Cog" OR "SiB7". This produced many results (nearly 37k) but restricting to clinical trials and RCTS within the last five years made it more manageable  (1132 results).
+
+SEARCH_3 focuses  on pain terms: pain OR fibromyalgia OR migraine OR neuropathic. This produced nearly a million results so I limited to clinical trials and RCTS within the last year (2529 results).
 
 
-*Note:* in fact some of the screeners names will need to be amended with wildcards.
+You then pull these searches into R
 
-## Putting search terms into readable contexts
 
-### EBSCO Host
+```r
+# Collects all the .nbib files in the wd and outputs them as dataframes
+fileNames <- Sys.glob("*.nbib")
+for (fileName in fileNames) {
+  sample <- litsearchr::import_results(file=fileName)
+  assign(paste0(tools::file_path_sans_ext(fileName)),sample)
+}
+```
+
+```
+## Reading file SEARCH_1.nbib ... done
+## Reading file SEARCH_2.nbib ... done
+## Reading file SEARCH_3.nbib ... done
+```
+Now choose which search to use, and define a prefix for all terms you produce that **matches that search**.
+
+
+
+```r
+focus <-SEARCH_3
+prefix <- "S3"
+```
+
+## 2. Use litsearchr to collate keywords
+
+We can have a look at the keywords, the function takes the dataset, 
+
+
+```r
+keywords <-term_extractor(focus,1,3)
+```
+
+```
+## Loading required namespace: stopwords
+```
+
+```r
+update_name(keywords)
+```
+
+## Collating search title content
+
+A bit more to do here as titles can contain many "stopwords" that are not informative to the topic of the article. I have begun to build a tentative stopword list at SR_stopwords.txt 
+
+
+```r
+SR_stopwords <- read_lines("SR_stopwords.txt")
+all_stopwords <- c(get_stopwords("English"), SR_stopwords)
+```
+
+
+```r
+titles<- get_best_titles(focus)
+update_name(titles)
+```
+
+We can combine these useful title terms with keywords, removing duplicates:
+
+```r
+terms <- unique(c(update_name(keywords), update_name(titles))) # note this continues to call the renaming function to make sure we are pointing to the most updated version, rather than the generic "keywords" - avoiding losing information if eg S1_keywords has been amended since
+update_name(terms)
+```
+
+
+### Network analysis of content
+
+We can create and visualise our content: 
+
+```r
+network <- create_the_network(focus,update_name(terms))
+update_name(network)
+print_the_network(update_name(network))
+```
+
+![](search_terms_files/figure-html/testing_network_creation-1.png)<!-- -->
+
+We can now visualise this:
+
+
+And find the strongest links in the network (note later entries have a stronger link):
+
+
+```r
+net_strengths <- strengths_of_network(update_name(network))
+update_name(net_strengths)
+```
+
+
+This can then be plotted against changepoints (where the network strength shifs, a bit like an eigenvalue)
+
+
+
+```r
+net_outputs<- find_network_cutoffs(update_name(net_strengths), update_name(network))
+cutoff <- unlist(net_outputs[1])
+update_name(cutoff)
+net_outputs[2]
+```
+
+```
+## [[1]]
+```
+
+![](search_terms_files/figure-html/network_cutoffs-1.png)<!-- -->
+
+By selecting one of these changepoints the set of title-derived keywords can be reduced down:
+
+
+
+```r
+cutoff_level <- 1 # NB set this explicitly higher or lower, it will be recorded elsewhere.
+network_levels <- paste("Network cutoff for",prefix, "is", cutoff_level)
+write(network_levels,"network_levels.txt")
+net_redux <- reduce_graph(update_name(network), cutoff[cutoff_level]) 
+selected_terms <- get_keywords(net_redux)
+selected_terms
+```
+
+```
+##  [1] "adverse events"              "aged"                       
+##  [3] "aging"                       "analgesia"                  
+##  [5] "analgesic"                   "analgesics"                 
+##  [7] "anesthesia"                  "anxiety"                    
+##  [9] "arthroplasty"                "back pain"                  
+## [11] "block"                       "cancer"                     
+## [13] "child"                       "children"                   
+## [15] "chronic"                     "chronic pain"               
+## [17] "clinical"                    "clinical outcomes"          
+## [19] "clinical trial"              "clinical trials"            
+## [21] "comfort"                     "complication"               
+## [23] "complications"               "depression"                 
+## [25] "disability"                  "education"                  
+## [27] "effectiveness"               "efficacy"                   
+## [29] "exercise"                    "function"                   
+## [31] "fusion"                      "head"                       
+## [33] "hip"                         "infection"                  
+## [35] "injection"                   "injections"                 
+## [37] "intervention"                "knee"                       
+## [39] "knee osteoarthritis"         "local"                      
+## [41] "low back pain"               "lumbar"                     
+## [43] "methods"                     "morphine"                   
+## [45] "nausea"                      "opioid"                     
+## [47] "osteoarthritis"              "outcome"                    
+## [49] "outcomes"                    "pain"                       
+## [51] "pain management"             "pain relief"                
+## [53] "placebo"                     "postoperative"              
+## [55] "postoperative pain"          "protocol"                   
+## [57] "qol"                         "quality of life"            
+## [59] "randomised controlled trial" "randomized"                 
+## [61] "randomized clinical trial"   "randomized controlled trial"
+## [63] "range of motion"             "rct"                        
+## [65] "rehabilitation"              "safety"                     
+## [67] "satisfaction"                "shoulder"                   
+## [69] "side effects"                "steroid"                    
+## [71] "strength"                    "stress"                     
+## [73] "surgery"                     "symptoms"                   
+## [75] "therapy"                     "treatment"                  
+## [77] "trial"                       "ultrasound"                 
+## [79] "ultrasound-guided"           "vas"                        
+## [81] "visual analog scale"         "visual analogue scale"      
+## [83] "women"                       "blind randomized"           
+## [85] "clinical outcome"            "controlled clinical"        
+## [87] "controlled clinical trial"   "controlled trial"           
+## [89] "opioid consumption"          "outcome measures"           
+## [91] "patients undergoing"         "placebo-controlled trial"   
+## [93] "prospective randomized"      "randomized clinical"        
+## [95] "randomized control"          "randomized controlled"      
+## [97] "randomized trial"
+```
+
+```r
+update_name(selected_terms)
+```
+
+### find some way of connecting this back with the keywords
+The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been involved in the network analysis, but we don't want to discard. Lacking expertise, the simplest thing would be to combine these with the title-derived selected terms just produced. (Also add in some starred terms from the original approach).
+
+These then are combined into a text output for manual review and to be placed into 
+
+
+```r
+longlist <- unique(c(update_name(keywords), update_name(selected_terms)))
+
+readr::write_lines(longlist, paste0(prefix, "_possible_terms",".txt"))
+```
+
+

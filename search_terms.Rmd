@@ -12,14 +12,29 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Population search terms
-Not sure about this: do we need to specify Adult or just use in exclusion criteria?
+```{r launch_scripts, echo=FALSE, fig.show='hide', include=TRUE, warning=FALSE}
+# This is the cleaning and pre-processing described above.
+# setwd("C:/Users/Alexander Fradera/OneDrive - University of Glasgow/non-dclin/5_Code/SR_Pain/")
+ source("SR_functions.R", local = knitr::knit_global(), echo = FALSE)
+```
 
+# Overall search approach:
+
+There are two fundamental terms to link: 
+
+1) Terms describing a selection of cognitive screens (predefined by [Alzheimer's Society Cognitive Assessment Toolkit (pdf)](https://www.alz.org/getmedia/9687d51e-641a-43a1-a96b-b29eb00e72bb/cognitive-assessment-toolkit))
+2) A set of terms that relate to chronic or clinically measurable pain
+
+THe first terms are fairly clear but must be accompanied by a broader term that surfaces articles that may use one or more cognitive screens but not mention which in title/abstract
+The second terms may especially benefit from considering further linked terms.
+
+
+# Cognitive screen search terms
 
 ```{r preview, include=FALSE}
-library(readr)
-input_file <- "cog_screens.csv"
-x <- spec_csv(input_file) # good practice to peek before reading in
+
+input_file <- "toolkit_screens.csv"
+x <- readr::spec_csv(input_file) # good practice to peek before reading in
 x
 
 ```
@@ -32,54 +47,171 @@ cog_screens <- read_csv(input_file
 
 
 
-# Pain search terms
 
 
-# Cognitive screen search terms
+I'm drawing from a shortlist which contains names and abbreviations. Firstly, pull into R and remove abbreviations (NB clunky):
 
 ```{r make_abbreviation_vector, include=FALSE}
-library(dplyr)
-abbrevsonly <- filter(cog_screens, cog_screens$Abbreviation != "to complete")
+
+a <- cog_screens  %>% 
+  tidyr::drop_na(abbreviation_alt) %>%
+  dplyr::pull(abbreviation_alt)
+
+b <- cog_screens  %>% 
+  tidyr::drop_na(abbreviation) %>%
+  dplyr::pull(abbreviation)
+
+all_abbrevs <-c(a,b)
+
+all_names <- cog_screens  %>% 
+  tidyr::drop_na(test_name) %>%
+  dplyr::pull(test_name)
+       
 ```
 
-
-
-
-
-
-
-## Raw search terms
-
-
-Based on all the cognitive screens in the .csv file, we would need to search for these test names and referents.
+Next put them into a readable form, separated by ORs.
 
 ```{r text_list, include=TRUE}
-library(stringr)
 
-screen_full_names<- str_flatten(cog_screens$Test_Name,"\" OR \"")
-screen_abbreviations<- str_flatten(abbrevsonly$Abbreviation,"\" OR \"")
-screen_referents <- str_c("\"", screen_full_names, "\" OR \"", screen_abbreviations, "\"")
+
+screen_all_names<- str_flatten(all_names,"\" OR \"")
+screen_abbreviations<- str_flatten(all_abbrevs,"\" OR \"")
+screen_referents <- str_c("\"", "cognitive screen*",  "\" OR \"", screen_all_names, "\" OR \"", screen_abbreviations, "\"")
  writeLines(screen_referents)
 
 ```
-In other words:
+
+The provisional search terms are thus: 
 
 `r screen_referents`
 
+These may be improved in the next stages.
 
-*Note:* in fact some of the screeners names will need to be amended with wildcards.
+# Pain terms
+based on a cursory search I came up with "pain OR fibromyalgia OR migraine OR neuropathic". Hopefully we can improve this in the next stages.
 
-## Putting search terms into readable contexts
+# Litsearchr term identification process
 
-### EBSCO Host
+To improve our search terms we can identify keywords from Litsearchr.
 
-```{r}
-s_screen_title <-  str_c("TI (",screen_referents,")")
-s_screen_abstract <-  str_c("AB (",screen_referents,")")
-  s_screen_testmeasures <- <-  str_c("TM (",screen_referents,")")
+## 1. Conduct naive searches
+Complete one or more searches of interest. This should be done in a way that produces a *.nbib file. Eg in PubMed complete your search and then select "Send To" citation manager. Put the saved file in your project folder.
+
+SEARCH_1 I searched PubMed pain* AND cognit* AND screen* which produced 949 results. NB this deviates from the search structure outlined above as I have separated cognition and screen here - acceptable at this information-gathering stage. Also, I then decided to amend using NOT (cognit* behav* therapy) to limit  irrelevant results about CBT (659 results).
+
+SEARCH_2 looks at cognitive screen terms using the terms identified above: "cognitive screen*" OR "Addenbrooke's Cognitive Examination" OR "Addenbrooke's Cognitive Examination Revised" OR "Mini-ACE" OR "Abbreviated Mental Test" OR "Mini-Cog" OR "Addenbrooke's Cognitive Examination - III" OR "Montreal Cognitive Assessment" OR "Mini Mental State Examination" OR "6-item cognitive impairment test" OR "Hopkins Verbal Learning Test" OR "Hopkins Verbal Learning Test Revised" OR "Test for the early detection of dementia" OR "Severe Impairment battery" OR "AMTS" OR "ACE-3" OR "SIB" OR "ACE" OR "ACE-R" OR "M-ACE" OR "AMT" OR "Mini-Cog" OR "ACE-III" OR "MoCA" OR "MMSE" OR "6CIT" OR "HVLT" OR "HVLT-R" OR "TE4D-Cog" OR "SiB7". This produced many results (nearly 37k) but restricting to clinical trials and RCTS within the last five years made it more manageable  (1132 results).
+
+SEARCH_3 focuses  on pain terms: pain OR fibromyalgia OR migraine OR neuropathic. This produced nearly a million results so I limited to clinical trials and RCTS within the last year (2529 results).
+
+
+You then pull these searches into R
+
+```{r pull_bib-files, echo=TRUE}
+
+# Collects all the .nbib files in the wd and outputs them as dataframes
+fileNames <- Sys.glob("*.nbib")
+for (fileName in fileNames) {
+  sample <- litsearchr::import_results(file=fileName)
+  assign(paste0(tools::file_path_sans_ext(fileName)),sample)
+}
+
+```
+Now choose which search to use, and define a prefix for all terms you produce that **matches that search**.
+
+
+```{r choose_search}
+focus <-SEARCH_3
+prefix <- "S3"
+```
+
+## 2. Use litsearchr to collate keywords
+
+We can have a look at the keywords, the function takes the dataset, 
+
+```{r get_keywords}
+keywords <-term_extractor(focus,1,3)
+update_name(keywords)
+```
+
+## Collating search title content
+
+A bit more to do here as titles can contain many "stopwords" that are not informative to the topic of the article. I have begun to build a tentative stopword list at SR_stopwords.txt 
+
+```{r create_stops}
+
+SR_stopwords <- read_lines("SR_stopwords.txt")
+all_stopwords <- c(get_stopwords("English"), SR_stopwords)
 
 ```
 
+```{r get_best_titles}
+titles<- get_best_titles(focus)
+update_name(titles)
+```
 
+We can combine these useful title terms with keywords, removing duplicates:
+```{r combined_terms}
+terms <- unique(c(update_name(keywords), update_name(titles))) # note this continues to call the renaming function to make sure we are pointing to the most updated version, rather than the generic "keywords" - avoiding losing information if eg S1_keywords has been amended since
+update_name(terms)
+```
+
+
+### Network analysis of content
+
+We can create and visualise our content: 
+```{r testing_network_creation}
+network <- create_the_network(focus,update_name(terms))
+update_name(network)
+print_the_network(update_name(network))
+```
+
+We can now visualise this:
+
+
+And find the strongest links in the network (note later entries have a stronger link):
+
+```{r network_strengths}
+net_strengths <- strengths_of_network(update_name(network))
+update_name(net_strengths)
+```
+
+
+This can then be plotted against changepoints (where the network strength shifs, a bit like an eigenvalue)
+
+
+```{r network_cutoffs}
+net_outputs<- find_network_cutoffs(update_name(net_strengths), update_name(network))
+cutoff <- unlist(net_outputs[1])
+update_name(cutoff)
+net_outputs[2]
+
+```
+
+By selecting one of these changepoints the set of title-derived keywords can be reduced down:
+
+
+```{r trim_network}
+cutoff_level <- 1 # NB set this explicitly higher or lower, it will be recorded elsewhere.
+network_levels <- paste("Network cutoff for",prefix, "is", cutoff_level)
+write(network_levels,"network_levels.txt")
+net_redux <- reduce_graph(update_name(network), cutoff[cutoff_level]) 
+selected_terms <- get_keywords(net_redux)
+selected_terms
+update_name(selected_terms)
+```
+
+### find some way of connecting this back with the keywords
+The Tudge walkthrough doesn't discuss this. But it seems that we have  information from the keywords that hasn't been involved in the network analysis, but we don't want to discard. Lacking expertise, the simplest thing would be to combine these with the title-derived selected terms just produced. (Also add in some starred terms from the original approach).
+
+These then are combined into a text output for manual review and to be placed into 
+
+```{r longlist}
+
+
+longlist <- unique(c(update_name(keywords), update_name(selected_terms)))
+
+readr::write_lines(longlist, paste0(prefix, "_possible_terms",".txt"))
+
+```
 
 
