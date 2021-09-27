@@ -1,1 +1,0 @@
-\(\("chronic migraine" OR "chronic musculoskeletal pain" OR "chronic pain" OR fibromyalgia OR knee OR "low back pain" OR migraine OR "neuropathic pain" OR nociception\) AND \(dementia OR "mild cognitive impairment" OR cognit*\) AND \(assessment OR tools OR screen*\)\)
